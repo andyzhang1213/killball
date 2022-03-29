@@ -1,5 +1,3 @@
 # killball
 
-Firbase URL: something
-
-also this
+Firbase URL: https://kill-ball.firebaseapp.com/
