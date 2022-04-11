@@ -22,11 +22,17 @@ import Vec2 from "../DataTypes/Vec2";
 import Color from "../Utils/Color";
 import Line from "../Nodes/Graphics/Line";
 import Debug from "../Debug/Debug";
+import default_scene from "../../default_scene";
 
 /**
  * An implementation of the RenderingManager class using CanvasRenderingContext2D.
  */
 export default class CanvasRenderer extends RenderingManager {
+    public static ctxRef: CanvasRenderingContext2D;
+    public static cw: number;
+    public static ch: number;
+    public static mr: DOMRect;
+
     protected ctx: CanvasRenderingContext2D;
     protected graphicRenderer: GraphicRenderer;
     protected tilemapRenderer: TilemapRenderer;
@@ -53,10 +59,14 @@ export default class CanvasRenderer extends RenderingManager {
     initializeCanvas(canvas: HTMLCanvasElement, width: number, height: number): CanvasRenderingContext2D {
         canvas.width = width;
         canvas.height = height;
-
+        
         this.worldSize = new Vec2(width, height);
 
         this.ctx = canvas.getContext("2d");
+        CanvasRenderer.ctxRef = this.ctx;
+        CanvasRenderer.cw = canvas.width;
+        CanvasRenderer.ch = canvas.height;
+        CanvasRenderer.mr = canvas.getBoundingClientRect();
 
         this.graphicRenderer = new GraphicRenderer(this.ctx);
         this.tilemapRenderer = new TilemapRenderer(this.ctx);
@@ -248,6 +258,7 @@ export default class CanvasRenderer extends RenderingManager {
     }
 
     clear(clearColor: Color): void {
+        if(this.scene instanceof default_scene) return;
         this.ctx.clearRect(0, 0, this.worldSize.x, this.worldSize.y);
         this.ctx.fillStyle = clearColor.toString();
         this.ctx.fillRect(0, 0, this.worldSize.x, this.worldSize.y);
